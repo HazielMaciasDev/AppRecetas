@@ -2,13 +2,14 @@
 // RECIPE RENDERING — index.html
 // =============================================================
 
-const CATEGORIES = ["Bebidas", "Desayuno", "Almuerzo", "Comida", "Cena"];
+const CATEGORIES = ["Desayunos", "Comidas", "Cenas", "Bebidas", "Colación", "Postre"];
 const CATEGORY_COLORS = {
+  "Desayunos": "var(--color-blush-sand)",
+  "Comidas": "var(--color-deep-teal)",
+  "Cenas": "var(--color-ink-navy)",
   "Bebidas": "var(--color-sage)",
-  "Desayuno": "var(--color-blush-sand)",
-  "Almuerzo": "var(--color-card-mint)",
-  "Comida": "var(--color-deep-teal)",
-  "Cena": "var(--color-ink-navy)"
+  "Colación": "var(--color-mint-mist)",
+  "Postre": "var(--color-dusty-rose)"
 };
 
 // -------------------------------------------------------------
@@ -16,11 +17,12 @@ const CATEGORY_COLORS = {
 // -------------------------------------------------------------
 function categoryBadge(categoria) {
   const map = {
+    "Desayunos": `<svg viewBox="0 0 36 36" fill="none"><ellipse cx="18" cy="16" rx="10" ry="3" stroke="#1c5d5f" stroke-width="1.6"/><path d="M8 16c0 6 4 11 10 11s10-5 10-11" stroke="#1c5d5f" stroke-width="1.6"/><path d="M14 14c0-3 2-5 4-5M22 14c0-3 2-5 4-5" stroke="#d6aec1" stroke-width="1.4" stroke-linecap="round"/></svg>`,
+    "Comidas": `<svg viewBox="0 0 36 36" fill="none"><circle cx="18" cy="18" r="9" stroke="#1c5d5f" stroke-width="1.6"/><path d="M18 9a8 8 0 010 16" fill="#a2cbcd" opacity=".5"/><circle cx="14" cy="16" r="1.2" fill="#d6aec1"/><circle cx="20" cy="20" r="1.5" fill="#65b8a2"/><path d="M22 8c2 1 3 3 3 5" stroke="#65b8a2" stroke-width="1.4" stroke-linecap="round"/></svg>`,
+    "Cenas": `<svg viewBox="0 0 36 36" fill="none"><path d="M8 18h20l-2 12a1 1 0 01-1 1H11a1 1 0 01-1-1l-2-12z" stroke="#1c5d5f" stroke-width="1.6" stroke-linejoin="round"/><circle cx="18" cy="14" r="5" stroke="#1c5d5f" stroke-width="1.6"/><path d="M14 14h8" stroke="#d6aec1" stroke-width="1.4" stroke-linecap="round"/></svg>`,
     "Bebidas": `<svg viewBox="0 0 36 36" fill="none"><path d="M12 8h12l-2 22a2 2 0 01-2 2h-4a2 2 0 01-2-2L12 8z" stroke="#1c5d5f" stroke-width="1.6" stroke-linejoin="round"/><path d="M12 6h12v2H12z" fill="#1c5d5f"/><path d="M16 14l4-4M20 14l-4-4" stroke="#65b8a2" stroke-width="1.4" stroke-linecap="round"/></svg>`,
-    "Desayuno": `<svg viewBox="0 0 36 36" fill="none"><ellipse cx="18" cy="16" rx="10" ry="3" stroke="#1c5d5f" stroke-width="1.6"/><path d="M8 16c0 6 4 11 10 11s10-5 10-11" stroke="#1c5d5f" stroke-width="1.6"/><path d="M14 14c0-3 2-5 4-5M22 14c0-3 2-5 4-5" stroke="#d6aec1" stroke-width="1.4" stroke-linecap="round"/></svg>`,
-    "Almuerzo": `<svg viewBox="0 0 36 36" fill="none"><circle cx="18" cy="18" r="9" stroke="#1c5d5f" stroke-width="1.6"/><path d="M18 9a8 8 0 010 16" fill="#a2cbcd" opacity=".5"/><circle cx="14" cy="16" r="1.2" fill="#d6aec1"/><circle cx="20" cy="20" r="1.5" fill="#65b8a2"/><path d="M22 8c2 1 3 3 3 5" stroke="#65b8a2" stroke-width="1.4" stroke-linecap="round"/></svg>`,
-    "Comida": `<svg viewBox="0 0 36 36" fill="none"><path d="M6 14c0-3 2-5 4-5s4 2 4 5-2 8-4 8-4-5-4-8z" stroke="#1c5d5f" stroke-width="1.6"/><path d="M22 9v17M18 13v13M26 9v17" stroke="#1c5d5f" stroke-width="1.6" stroke-linecap="round"/><circle cx="22" cy="8" r="2" fill="#65b8a2"/></svg>`,
-    "Cena": `<svg viewBox="0 0 36 36" fill="none"><path d="M8 18h20l-2 12a1 1 0 01-1 1H11a1 1 0 01-1-1l-2-12z" stroke="#1c5d5f" stroke-width="1.6" stroke-linejoin="round"/><circle cx="18" cy="14" r="5" stroke="#1c5d5f" stroke-width="1.6"/><path d="M14 14h8" stroke="#d6aec1" stroke-width="1.4" stroke-linecap="round"/></svg>`
+    "Colación": `<svg viewBox="0 0 36 36" fill="none"><path d="M6 18a12 12 0 0124 0 12 12 0 01-24 0z" stroke="#1c5d5f" stroke-width="1.6"/><circle cx="14" cy="18" r="2" fill="#65b8a2"/><circle cx="22" cy="20" r="2.5" fill="#d6aec1"/><path d="M11 25h14" stroke="#1c5d5f" stroke-width="1.6" stroke-linecap="round"/></svg>`,
+    "Postre": `<svg viewBox="0 0 36 36" fill="none"><path d="M10 24h16l-2-6H12l-2 6z" stroke="#1c5d5f" stroke-width="1.6" stroke-linejoin="round"/><path d="M14 18a4 4 0 018 0" stroke="#65b8a2" stroke-width="1.6" stroke-linecap="round"/><circle cx="16" cy="14" r="1.5" fill="#d6aec1"/><circle cx="22" cy="14" r="1.5" fill="#d6aec1"/></svg>`
   };
   return map[categoria] || "";
 }
@@ -70,7 +72,7 @@ function formatMacros(num, unit = "g") {
 }
 
 function getRecipes() {
-  return window.RECIPES_DATA || [];
+  return (window.RECIPES_DATA || []).map(r => window.normalizeRecipe ? window.normalizeRecipe(r) : r);
 }
 
 function filterRecipes() {
@@ -272,8 +274,11 @@ function updateStats() {
 }
 
 // Boot
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
   if (document.getElementById("recipe-grid")) {
+    if (window.loadRecipes) {
+      await window.loadRecipes();
+    }
     renderAll();
     updateStats();
   }

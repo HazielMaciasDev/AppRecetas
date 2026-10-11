@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Genera un menú semanal de 7 días con 5 tiempos de comida. Lista de compras consolidada automáticamente.">
+  <title>Plan semanal — AppRecetas</title>
+
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%231c5d5f'/%3E%3Ctext x='16' y='22' font-family='Source Serif 4, Georgia, serif' font-size='18' font-weight='700' font-style='italic' text-anchor='middle' fill='white'%3Er%3C/text%3E%3C/svg%3E">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;0,8..60,700;1,8..60,400;1,8..60,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="assets/css/tokens.css">
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <link rel="stylesheet" href="assets/css/pages.css">
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="nav">
+    <div class="container nav__inner">
+      <a href="index.html" class="nav__brand">
+        <span class="nav__brand-mark">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M7 4v16M17 4v16M7 12h10" stroke="white" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </span>
+        <span>Recetario</span>
+      </a>
+      <ul class="nav__links">
+        <li><a href="index.html" class="nav__link">Recetas</a></li>
+        <li><a href="despensa.html" class="nav__link">Despensa</a></li>
+        <li><a href="plan.html" class="nav__link is-active">Plan semanal</a></li>
+        <li><a href="perfiles.html" class="nav__link">Perfiles</a></li>
+      </ul>
+      <div class="nav__cta">
+        <button class="nav__menu-trigger" aria-label="Menú"><span></span></button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HEADER -->
+  <header class="page-header">
+    <div class="container">
+      <span class="eyebrow eyebrow--rose">● Nunca sin ideas</span>
+      <h1 class="headline-display">Plan <em>semanal</em></h1>
+      <p class="lead">Armamos un menú de 7 días × 5 tiempos para que no vuelvas a preguntarte "¿qué cocino hoy?". Respetamos tus kcal y macros objetivo, y al final te damos la lista del súper.</p>
+    </div>
+  </header>
+
+  <!-- CONTROLES -->
+  <section class="container" style="padding-bottom: var(--space-12);">
+    <div class="plan-controls">
+      <div class="plan-controls__perfil" id="perfil-activo-info">
+        <span class="eyebrow eyebrow--navy">● Perfil activo</span>
+        <div id="perfil-activo-detail">Cargando…</div>
+      </div>
+      <div class="plan-controls__actions">
+        <button id="btn-generar" class="btn btn--primary btn--icon">Generar plan nuevo</button>
+        <button id="btn-clear" class="btn btn--ghost" hidden>Borrar plan actual</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- PLAN GRID -->
+  <section class="container" style="padding-bottom: var(--space-16);">
+    <div id="plan-grid" class="plan-grid">
+      <!-- inyectado por JS -->
+    </div>
+  </section>
+
+  <!-- RESUMEN + LISTA DE COMPRAS -->
+  <section class="container" style="padding-bottom: var(--space-22);">
+    <div id="plan-resumen" class="plan-resumen" hidden>
+      <div class="plan-resumen__macros">
+        <h2 class="headline-serif">Promedio <em>diario</em></h2>
+        <p class="lead">Suma de los 7 días dividida entre 7. Comparamos contra tu objetivo.</p>
+        <div id="macros-promedio" class="macros-promedio"></div>
+      </div>
+
+      <div class="plan-resumen__lista">
+        <div class="section-head">
+          <span class="eyebrow eyebrow--sage">● Lista de compras</span>
+          <h2 class="headline-serif">Para toda la <em>semana</em></h2>
+          <p class="lead" style="margin-top: var(--space-3);">Ingredientes únicos del plan, organizados por tipo.</p>
+        </div>
+        <div id="lista-compras" class="lista-compras"></div>
+        <div style="margin-top: var(--space-6); display: flex; gap: var(--space-3); flex-wrap: wrap;">
+          <button class="btn btn--primary btn--sm" id="btn-print">Imprimir lista</button>
+          <button class="btn btn--ghost btn--sm" id="btn-copy">Copiar texto</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__inner">
+        <div>
+          <h3 class="footer__brand">Recetario</h3>
+          <p class="footer__tagline">Un espacio editorial para cocinar con calma. Recetas probadas, macros honestos y cero pasos decorativos.</p>
+        </div>
+        <div class="footer__col">
+          <h4>App</h4>
+          <ul>
+            <li><a href="despensa.html">Mi despensa</a></li>
+            <li><a href="plan.html">Plan semanal</a></li>
+            <li><a href="perfiles.html">Mis perfiles</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer__bottom">
+        <span>© 2026 AppRecetas</span>
+        <span>Hecho con fundamento · v2.0</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/js/supabase.js"></script>
+  <script src="assets/js/data.js"></script>
+  <script src="assets/js/meal-planner.js"></script>
+  <script src="assets/js/plan.js"></script>
+</body>
+</html>

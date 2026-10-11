@@ -34,3 +34,8 @@ node_modules/
 # Varios
 *.tmp
 *.bak
+
+# Local dev artifacts
+AppRecetas-main/
+.hypothesis/
+.playwright-mcp/

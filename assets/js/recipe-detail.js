@@ -173,11 +173,12 @@ function renderRecipe(recipe) {
 
 function categoryBadgeLarge(categoria) {
   const map = {
+    "Desayunos": `<svg viewBox="0 0 200 200" fill="none"><ellipse cx="100" cy="100" rx="60" ry="14" stroke="#1c5d5f" stroke-width="3"/><path d="M40 100c0 35 27 60 60 60s60-25 60-60" stroke="#1c5d5f" stroke-width="3" stroke-linecap="round"/><path d="M75 90c0-15 10-25 25-25M125 90c0-15 10-25 25-25" stroke="#d6aec1" stroke-width="2.5" stroke-linecap="round"/><path d="M52 38l8 16M148 38l-8 16M30 100h140" stroke="#65b8a2" stroke-width="2" stroke-linecap="round" stroke-dasharray="3 5"/></svg>`,
+    "Comidas": `<svg viewBox="0 0 200 200" fill="none"><circle cx="100" cy="100" r="55" stroke="#1c5d5f" stroke-width="3"/><circle cx="100" cy="100" r="55" fill="#a2cbcd" opacity=".25"/><circle cx="80" cy="90" r="6" fill="#d6aec1"/><circle cx="115" cy="110" r="9" fill="#65b8a2"/><circle cx="90" cy="120" r="5" fill="#65b8a2"/><path d="M140 50c10 6 18 16 22 28" stroke="#65b8a2" stroke-width="3" stroke-linecap="round"/></svg>`,
+    "Cenas": `<svg viewBox="0 0 200 200" fill="none"><path d="M40 110h120l-10 65a4 4 0 01-4 4H54a4 4 0 01-4-4L40 110z" stroke="#1c5d5f" stroke-width="3" stroke-linejoin="round"/><circle cx="100" cy="80" r="30" stroke="#1c5d5f" stroke-width="3"/><path d="M85 80h30" stroke="#d6aec1" stroke-width="3" stroke-linecap="round"/><circle cx="55" cy="40" r="3" fill="#65b8a2"/><circle cx="160" cy="170" r="3" fill="#d6aec1"/></svg>`,
     "Bebidas": `<svg viewBox="0 0 200 200" fill="none"><path d="M70 30h60l-10 130a10 10 0 01-10 10H90a10 10 0 01-10-10L70 30z" stroke="#1c5d5f" stroke-width="3" stroke-linejoin="round"/><path d="M70 22h60v10H70z" fill="#1c5d5f"/><path d="M130 38l24-18v24" stroke="#1c5d5f" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M85 80c2 6 6 10 12 12M115 80c-2 6-6 10-12 12" stroke="#65b8a2" stroke-width="2.5" stroke-linecap="round"/></svg>`,
-    "Desayuno": `<svg viewBox="0 0 200 200" fill="none"><ellipse cx="100" cy="100" rx="60" ry="14" stroke="#1c5d5f" stroke-width="3"/><path d="M40 100c0 35 27 60 60 60s60-25 60-60" stroke="#1c5d5f" stroke-width="3" stroke-linecap="round"/><path d="M75 90c0-15 10-25 25-25M125 90c0-15 10-25 25-25" stroke="#d6aec1" stroke-width="2.5" stroke-linecap="round"/><path d="M52 38l8 16M148 38l-8 16M30 100h140" stroke="#65b8a2" stroke-width="2" stroke-linecap="round" stroke-dasharray="3 5"/></svg>`,
-    "Almuerzo": `<svg viewBox="0 0 200 200" fill="none"><circle cx="100" cy="100" r="55" stroke="#1c5d5f" stroke-width="3"/><circle cx="100" cy="100" r="55" fill="#a2cbcd" opacity=".25"/><circle cx="80" cy="90" r="6" fill="#d6aec1"/><circle cx="115" cy="110" r="9" fill="#65b8a2"/><circle cx="90" cy="120" r="5" fill="#65b8a2"/><path d="M140 50c10 6 18 16 22 28" stroke="#65b8a2" stroke-width="3" stroke-linecap="round"/></svg>`,
-    "Comida": `<svg viewBox="0 0 200 200" fill="none"><path d="M30 90c0-20 13-35 30-35s30 15 30 35-13 50-30 50-30-30-30-50z" stroke="#1c5d5f" stroke-width="3" stroke-linejoin="round"/><path d="M150 55v90M130 80v65M170 80v65" stroke="#1c5d5f" stroke-width="3" stroke-linecap="round"/><circle cx="150" cy="50" r="14" fill="#65b8a2"/><path d="M120 175h60" stroke="#d6aec1" stroke-width="3" stroke-linecap="round"/></svg>`,
-    "Cena": `<svg viewBox="0 0 200 200" fill="none"><path d="M40 110h120l-10 65a4 4 0 01-4 4H54a4 4 0 01-4-4L40 110z" stroke="#1c5d5f" stroke-width="3" stroke-linejoin="round"/><circle cx="100" cy="80" r="30" stroke="#1c5d5f" stroke-width="3"/><path d="M85 80h30" stroke="#d6aec1" stroke-width="3" stroke-linecap="round"/><circle cx="55" cy="40" r="3" fill="#65b8a2"/><circle cx="160" cy="170" r="3" fill="#d6aec1"/></svg>`
+    "Colación": `<svg viewBox="0 0 200 200" fill="none"><circle cx="100" cy="100" r="60" stroke="#1c5d5f" stroke-width="3"/><circle cx="80" cy="95" r="10" fill="#65b8a2"/><circle cx="120" cy="105" r="14" fill="#d6aec1"/><path d="M60 145h80" stroke="#1c5d5f" stroke-width="3" stroke-linecap="round"/><path d="M85 75l5-8M115 80l6-6" stroke="#1c5d5f" stroke-width="3" stroke-linecap="round"/></svg>`,
+    "Postre": `<svg viewBox="0 0 200 200" fill="none"><path d="M50 130h100l-15-40H65l-15 40z" stroke="#1c5d5f" stroke-width="3" stroke-linejoin="round"/><path d="M70 90a30 30 0 0160 0" stroke="#65b8a2" stroke-width="3" stroke-linecap="round"/><circle cx="85" cy="80" r="6" fill="#d6aec1"/><circle cx="115" cy="80" r="6" fill="#d6aec1"/><path d="M70 130l-10 40M130 130l10 40" stroke="#1c5d5f" stroke-width="3" stroke-linecap="round"/><circle cx="150" cy="60" r="4" fill="#65b8a2"/></svg>`
   };
   return map[categoria] || "";
 }
@@ -198,13 +199,14 @@ function renderNotFound() {
   `;
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
   const id = getQueryParam("id");
   if (!id) {
     renderNotFound();
     return;
   }
-  const recipes = window.RECIPES_DATA || [];
+  if (window.loadRecipes) await window.loadRecipes();
+  const recipes = (window.RECIPES_DATA || []).map(r => window.normalizeRecipe ? window.normalizeRecipe(r) : r);
   const recipe = recipes.find(r => r.id === id);
   if (!recipe) {
     renderNotFound();

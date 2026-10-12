@@ -6,11 +6,11 @@
   <meta name="description" content="¿Qué puedo cocinar hoy? Marca los ingredientes que tienes en casa y la app te sugiere recetas compatibles.">
   <title>Mi despensa — AppRecetas</title>
 
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%231c5d5f'/%3E%3Ctext x='16' y='22' font-family='Source Serif 4, Georgia, serif' font-size='18' font-weight='700' font-style='italic' text-anchor='middle' fill='white'%3Er%3C/text%3E%3C/svg%3E">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230a0a0a'/%3E%3Ctext x='16' y='22' font-family='Inter, sans-serif' font-size='17' font-weight='600' text-anchor='middle' fill='white'%3Er%3C/text%3E%3C/svg%3E">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;0,8..60,700;1,8..60,400;1,8..60,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="assets/css/tokens.css">
   <link rel="stylesheet" href="assets/css/styles.css">
@@ -24,10 +24,10 @@
       <a href="index.html" class="nav__brand">
         <span class="nav__brand-mark">
           <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M7 4v16M17 4v16M7 12h10" stroke="white" stroke-width="2" stroke-linecap="round"/>
+            <path d="M5 7h14M5 12h14M5 17h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
           </svg>
         </span>
-        <span>Recetario</span>
+        <span>AppRecetas</span>
       </a>
       <ul class="nav__links">
         <li><a href="index.html" class="nav__link">Recetas</a></li>
@@ -43,14 +43,14 @@
   <!-- HEADER -->
   <header class="page-header">
     <div class="container">
-      <span class="eyebrow eyebrow--sage">● Cocina con lo que tienes</span>
-      <h1 class="headline-display">Mi <em>despensa</em></h1>
+      <span class="text-mono">Cocina con lo que tienes</span>
+      <h1 class="display" style="margin-top: var(--spacing-12);">Mi despensa</h1>
       <p class="lead">Marca los ingredientes que tienes hoy en casa. Te diremos qué recetas puedes cocinar sin pasar por el súper.</p>
     </div>
   </header>
 
   <!-- CONTROLES -->
-  <section class="container" style="padding: 0 0 var(--space-12);">
+  <section class="container" style="padding-bottom: var(--spacing-48);">
     <form id="despensa-form" class="despensa-form">
       <div class="despensa-form__row">
         <input type="text" id="input-ingrediente" placeholder="Ej: pechuga de pollo, espinaca, quinoa…" autocomplete="off" required>
@@ -70,10 +70,10 @@
   </section>
 
   <!-- LISTA DESPENSA -->
-  <section class="container" style="padding-bottom: var(--space-16);">
+  <section class="container" style="padding-bottom: var(--spacing-48);">
     <div class="section-head">
-      <span class="eyebrow">● Ingredientes</span>
-      <h2 class="headline-serif">Lo que tengo <em>en casa</em></h2>
+      <span class="text-mono">Ingredientes</span>
+      <h2 class="heading">Lo que tengo en casa</h2>
     </div>
     <div id="despensa-list" class="despensa-list">
       <!-- inyectado por JS -->
@@ -81,11 +81,11 @@
   </section>
 
   <!-- RECETAS COMPATIBLES -->
-  <section class="container" style="padding-bottom: var(--space-22);">
+  <section class="container" style="padding-bottom: var(--spacing-48);">
     <div class="section-head">
-      <span class="eyebrow eyebrow--rose">● Sugerencias</span>
-      <h2 class="headline-serif">Qué puedo <em>cocinar</em> hoy</h2>
-      <p class="lead" style="margin-top: var(--space-3);">Ordenadas por compatibilidad. Cuantos más ingredientes marques, más opciones verás.</p>
+      <span class="text-mono">Sugerencias</span>
+      <h2 class="heading">Qué puedo cocinar hoy</h2>
+      <p class="section-head__lede">Ordenadas por compatibilidad. Cuantos más ingredientes marques, más opciones verás.</p>
     </div>
     <div id="compatibles-grid" class="recipe-grid">
       <!-- inyectado por JS -->
@@ -97,7 +97,7 @@
     <div class="container">
       <div class="footer__inner">
         <div>
-          <h3 class="footer__brand">Recetario</h3>
+          <h3 class="footer__brand">AppRecetas</h3>
           <p class="footer__tagline">Un espacio editorial para cocinar con calma. Recetas probadas, macros honestos y cero pasos decorativos.</p>
         </div>
         <div class="footer__col">
@@ -105,12 +105,6 @@
           <ul>
             <li><a href="despensa.html">Mi despensa</a></li>
             <li><a href="plan.html">Plan semanal</a></li>
-          </ul>
-        </div>
-        <div class="footer__col">
-          <h4>Categorías</h4>
-          <ul>
-            <li><a href="index.html#recetas">Recetas</a></li>
           </ul>
         </div>
       </div>

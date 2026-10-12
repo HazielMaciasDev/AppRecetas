@@ -4,13 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Receta detallada con ingredientes, pasos e información nutricional.">
-  <title>Receta — Recetario Editorial</title>
+  <title>Receta — AppRecetas</title>
 
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%231c5d5f'/%3E%3Ctext x='16' y='22' font-family='Source Serif 4, Georgia, serif' font-size='18' font-weight='700' font-style='italic' text-anchor='middle' fill='white'%3Er%3C/text%3E%3C/svg%3E">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230a0a0a'/%3E%3Ctext x='16' y='22' font-family='Inter, sans-serif' font-size='17' font-weight='600' text-anchor='middle' fill='white'%3Er%3C/text%3E%3C/svg%3E">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;0,8..60,700;1,8..60,400;1,8..60,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="assets/css/tokens.css">
   <link rel="stylesheet" href="assets/css/styles.css">
@@ -23,10 +23,10 @@
       <a href="index.html" class="nav__brand">
         <span class="nav__brand-mark">
           <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M7 4v16M17 4v16M7 12h10" stroke="white" stroke-width="2" stroke-linecap="round"/>
+            <path d="M5 7h14M5 12h14M5 17h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
           </svg>
         </span>
-        <span>Recetario</span>
+        <span>AppRecetas</span>
       </a>
       <ul class="nav__links">
         <li><a href="index.html" class="nav__link">Recetas</a></li>
@@ -34,7 +34,7 @@
         <li><a href="plan.html" class="nav__link">Plan semanal</a></li>
       </ul>
       <div class="nav__cta">
-        <button class="btn btn--primary btn--sm" onclick="window.print()">Imprimir</button>
+        <button class="btn btn--ghost btn--sm" onclick="window.print()">Imprimir</button>
         <button class="nav__menu-trigger" aria-label="Menú"><span></span></button>
       </div>
     </div>
@@ -42,8 +42,8 @@
 
   <!-- DETAIL dinámico -->
   <main id="recipe-detail">
-    <section class="container" style="padding: var(--space-22) 0;">
-      <div class="skeleton" style="height: 600px;"></div>
+    <section class="container" style="padding: var(--spacing-48) 0;">
+      <div class="skeleton" style="height: 600px; background: var(--color-canvas); border-radius: var(--radius-cards);"></div>
     </section>
   </main>
 
@@ -52,7 +52,7 @@
     <div class="container">
       <div class="footer__inner">
         <div>
-          <h3 class="footer__brand">Recetario</h3>
+          <h3 class="footer__brand">AppRecetas</h3>
           <p class="footer__tagline">Un espacio editorial para cocinar con calma. Recetas probadas, macros honestos y cero pasos decorativos.</p>
         </div>
         <div class="footer__col">
@@ -75,8 +75,8 @@
         </div>
       </div>
       <div class="footer__bottom">
-        <span>© 2026 Recetario Editorial</span>
-        <span>Hecho con fundamento · v1.0</span>
+        <span>© 2026 AppRecetas</span>
+        <span>Hecho con fundamento · v2.0</span>
       </div>
     </div>
   </footer>

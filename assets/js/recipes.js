@@ -1,35 +1,44 @@
 // =============================================================
 // RECIPE RENDERING — index.html
+// Diseño shadcn-style: monocromático, sin stickers decorativos.
+// Iconos Lucide-style thin-stroke (1.5px).
 // =============================================================
 
 const CATEGORIES = ["Desayunos", "Comidas", "Cenas", "Bebidas", "Colación", "Postre"];
-const CATEGORY_COLORS = {
-  "Desayunos": "var(--color-blush-sand)",
-  "Comidas": "var(--color-deep-teal)",
-  "Cenas": "var(--color-ink-navy)",
-  "Bebidas": "var(--color-sage)",
-  "Colación": "var(--color-mint-mist)",
-  "Postre": "var(--color-dusty-rose)"
+
+// -------------------------------------------------------------
+// Iconos Lucide-style minimalistas (thin stroke 1.5px)
+// -------------------------------------------------------------
+const ICONS = {
+  clock: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>`,
+  users: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>`,
+  search: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>`,
+  // Iconos por categoría (Lucide-style)
+  desayuno: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8a4 4 0 0 0-8 0v2h8z"/><path d="M3 10h18v3a6 6 0 0 1-6 6H9a6 6 0 0 1-6-6z"/><path d="M6 19v2"/><path d="M18 19v2"/></svg>`,
+  comida:   `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11h18"/><path d="M12 11v9"/><path d="M5 11a7 7 0 0 1 14 0"/></svg>`,
+  cena:     `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h20"/><path d="M5 12V8a3 3 0 0 1 6 0v4"/><circle cx="17" cy="10" r="3"/><path d="M19 13v8"/><path d="M9 13v6"/></svg>`,
+  bebida:   `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2h8l-2 19a2 2 0 0 1-2 2h-0a2 2 0 0 1-2-2z"/><path d="M8 6h8"/><path d="M16 3h2a2 2 0 0 1 2 2v0a2 2 0 0 1-2 2h-2"/></svg>`,
+  colacion: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 6v6l3 3"/></svg>`,
+  postre:   `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21h16"/><path d="M5 21V11a7 7 0 0 1 14 0v10"/><path d="M12 4v7"/><path d="M9 7l3-3 3 3"/></svg>`
 };
 
-// -------------------------------------------------------------
-// CATEGORY ICON SVG decorativo (hand-drawn style) — versión pequeña para cards
-// -------------------------------------------------------------
-function categoryBadge(categoria) {
+function categoryIcon(categoria) {
   const map = {
-    "Desayunos": `<svg viewBox="0 0 36 36" fill="none"><ellipse cx="18" cy="16" rx="10" ry="3" stroke="#1c5d5f" stroke-width="1.6"/><path d="M8 16c0 6 4 11 10 11s10-5 10-11" stroke="#1c5d5f" stroke-width="1.6"/><path d="M14 14c0-3 2-5 4-5M22 14c0-3 2-5 4-5" stroke="#d6aec1" stroke-width="1.4" stroke-linecap="round"/></svg>`,
-    "Comidas": `<svg viewBox="0 0 36 36" fill="none"><circle cx="18" cy="18" r="9" stroke="#1c5d5f" stroke-width="1.6"/><path d="M18 9a8 8 0 010 16" fill="#a2cbcd" opacity=".5"/><circle cx="14" cy="16" r="1.2" fill="#d6aec1"/><circle cx="20" cy="20" r="1.5" fill="#65b8a2"/><path d="M22 8c2 1 3 3 3 5" stroke="#65b8a2" stroke-width="1.4" stroke-linecap="round"/></svg>`,
-    "Cenas": `<svg viewBox="0 0 36 36" fill="none"><path d="M8 18h20l-2 12a1 1 0 01-1 1H11a1 1 0 01-1-1l-2-12z" stroke="#1c5d5f" stroke-width="1.6" stroke-linejoin="round"/><circle cx="18" cy="14" r="5" stroke="#1c5d5f" stroke-width="1.6"/><path d="M14 14h8" stroke="#d6aec1" stroke-width="1.4" stroke-linecap="round"/></svg>`,
-    "Bebidas": `<svg viewBox="0 0 36 36" fill="none"><path d="M12 8h12l-2 22a2 2 0 01-2 2h-4a2 2 0 01-2-2L12 8z" stroke="#1c5d5f" stroke-width="1.6" stroke-linejoin="round"/><path d="M12 6h12v2H12z" fill="#1c5d5f"/><path d="M16 14l4-4M20 14l-4-4" stroke="#65b8a2" stroke-width="1.4" stroke-linecap="round"/></svg>`,
-    "Colación": `<svg viewBox="0 0 36 36" fill="none"><path d="M6 18a12 12 0 0124 0 12 12 0 01-24 0z" stroke="#1c5d5f" stroke-width="1.6"/><circle cx="14" cy="18" r="2" fill="#65b8a2"/><circle cx="22" cy="20" r="2.5" fill="#d6aec1"/><path d="M11 25h14" stroke="#1c5d5f" stroke-width="1.6" stroke-linecap="round"/></svg>`,
-    "Postre": `<svg viewBox="0 0 36 36" fill="none"><path d="M10 24h16l-2-6H12l-2 6z" stroke="#1c5d5f" stroke-width="1.6" stroke-linejoin="round"/><path d="M14 18a4 4 0 018 0" stroke="#65b8a2" stroke-width="1.6" stroke-linecap="round"/><circle cx="16" cy="14" r="1.5" fill="#d6aec1"/><circle cx="22" cy="14" r="1.5" fill="#d6aec1"/></svg>`
+    "Desayunos": ICONS.desayuno,
+    "Comidas":   ICONS.comida,
+    "Cenas":     ICONS.cena,
+    "Bebidas":   ICONS.bebida,
+    "Colación":  ICONS.colacion,
+    "Postre":    ICONS.postre
   };
-  return map[categoria] || "";
+  return map[categoria] || ICONS.comida;
 }
 
-// Exponer globalmente para que recipe-detail.js pueda usar la versión grande
-window.categoryBadge = categoryBadge;
+window.categoryIcon = categoryIcon;
 
+// -------------------------------------------------------------
+// State
+// -------------------------------------------------------------
 const state = {
   activeCategory: "Todas",
   searchTerm: "",
@@ -37,40 +46,8 @@ const state = {
 };
 
 // -------------------------------------------------------------
-// SVG ICONS inline
-// -------------------------------------------------------------
-const ICONS = {
-  clock: `<svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.4"/><path d="M8 5v3.2L10 10" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>`,
-  chef: `<svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 6c0-2.2 1.8-4 4-4s4 1.8 4 4v1H4V6z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><path d="M2.5 7h11v6.5a1 1 0 01-1 1h-9a1 1 0 01-1-1V7z" stroke="currentColor" stroke-width="1.3"/><circle cx="8" cy="10.5" r="1" fill="currentColor"/></svg>`,
-  bowl: `<svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <ellipse cx="32" cy="26" rx="22" ry="6" stroke="#231e21" stroke-width="2"/>
-    <path d="M10 26c0 11 9 20 22 20s22-9 22-20" stroke="#231e21" stroke-width="2" stroke-linecap="round"/>
-    <path d="M21 18c0-3 2-5 4-5M32 16c0-3 2-5 4-5M43 18c0-3 2-5 4-5" stroke="#65b8a2" stroke-width="2" stroke-linecap="round"/>
-    <circle cx="42" cy="22" r="2" fill="#d6aec1"/>
-  </svg>`,
-  pitcher: `<svg viewBox="0 0 64 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M18 18l2 48a6 6 0 006 6h16a6 6 0 006-6l2-48" stroke="#231e21" stroke-width="2" stroke-linejoin="round"/>
-    <path d="M16 8h32v12H16z" stroke="#231e21" stroke-width="2" stroke-linejoin="round"/>
-    <path d="M48 22l8-6v8" stroke="#231e21" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M22 30l4 4 4-4M38 30l-4 4-4-4" stroke="#65b8a2" stroke-width="1.5" stroke-linecap="round"/>
-    <path d="M30 40c0 6 6 8 6 14M28 50c2-2 4-3 6-5" stroke="#d6aec1" stroke-width="1.5" stroke-linecap="round"/>
-  </svg>`,
-  empty: `<svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="40" cy="40" r="32" stroke="currentColor" stroke-width="2" stroke-dasharray="4 6"/>
-    <path d="M30 38c0-2 2-4 4-4s4 2 4 4-2 8-4 8-4-6-4-8z" stroke="currentColor" stroke-width="1.6"/>
-    <path d="M42 38c0-2 2-4 4-4s4 2 4 4-2 8-4 8-4-6-4-8z" stroke="currentColor" stroke-width="1.6"/>
-    <path d="M32 56c4-2 8-2 12 0" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
-  </svg>`,
-  search: `<svg viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.4"/><path d="M11 11l3 3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>`
-};
-
-// -------------------------------------------------------------
 // Helpers
 // -------------------------------------------------------------
-function formatMacros(num, unit = "g") {
-  return `${num}${unit}`;
-}
-
 function getRecipes() {
   return (window.RECIPES_DATA || []).map(r => window.normalizeRecipe ? window.normalizeRecipe(r) : r);
 }
@@ -87,7 +64,7 @@ function filterRecipes() {
     const t = state.searchTerm.toLowerCase();
     list = list.filter(r =>
       r.titulo.toLowerCase().includes(t) ||
-      r.descripcion.toLowerCase().includes(t) ||
+      (r.descripcion || "").toLowerCase().includes(t) ||
       (r.tags || []).some(tag => tag.toLowerCase().includes(t))
     );
   }
@@ -100,32 +77,22 @@ function filterRecipes() {
 function renderPhotoCard(recipe) {
   const photoContent = recipe.foto
     ? `<img class="recipe-card__photo-img" src="${recipe.foto}" alt="${recipe.titulo}" loading="lazy">`
-    : `<div class="recipe-card__photo-placeholder">${categoryBadge(recipe.categoria)}</div>`;
+    : `<div class="recipe-card__photo-placeholder">${categoryIcon(recipe.categoria)}</div>`;
 
   return `
     <a href="receta.html?id=${recipe.id}" class="recipe-card fade-in">
       <div class="recipe-card__photo">
         ${photoContent}
-        <span class="recipe-card__category">● ${recipe.categoria}</span>
-        <div class="recipe-card__macros">
-          <span class="recipe-card__macro">${recipe.macros.kcal} kcal</span>
-        </div>
-        <div class="recipe-card__sticker recipe-card__sticker--time sticker-bobbing">
-          ${ICONS.clock}
-        </div>
-        <div class="recipe-card__sticker recipe-card__sticker--protein">
-          ${ICONS.chef}
-        </div>
+        <span class="recipe-card__category">${recipe.categoria}</span>
       </div>
       <div class="recipe-card__body">
         <h3 class="recipe-card__title">${recipe.titulo}</h3>
-        <p class="recipe-card__desc">${recipe.descripcion}</p>
+        <p class="recipe-card__desc">${recipe.descripcion || ""}</p>
         <div class="recipe-card__meta">
           <span class="recipe-card__meta-item">${ICONS.clock} ${recipe.tiempoMin} min</span>
-          <span class="recipe-card__meta-item">${ICONS.chef} ${recipe.dificultad}</span>
-          <span class="recipe-card__meta-item">${recipe.porciones} pers</span>
+          <span class="recipe-card__meta-item">${ICONS.users} ${recipe.porciones} pers</span>
+          <span style="margin-left: auto;">${recipe.macros.kcal} kcal</span>
         </div>
-        <span class="recipe-card__cta">Ver receta completa</span>
       </div>
     </a>
   `;
@@ -154,7 +121,7 @@ function renderFilters() {
       <div class="filters__row" id="category-filters">
         ${pillsHtml}
       </div>
-      <div class="filters__row" style="justify-content: space-between; align-items: center;">
+      <div class="filters__row filters__row--end">
         <div class="search-input">
           ${ICONS.search}
           <input type="search" id="recipe-search" placeholder="Buscar por nombre, ingrediente, tag…" value="${state.searchTerm}" />
@@ -174,7 +141,7 @@ function renderActiveFilters() {
 
   display.innerHTML = filters.length === 0
     ? ""
-    : `<span style="font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.059em; color: rgba(40,51,56,0.5);">Filtros activos</span>
+    : `<span class="text-mono">Filtros activos</span>
        <div class="active-filters__list">${filters.map(f => `
          <span class="chip">${f.label}
            <span class="chip__close" data-filter-type="${f.type}">✕</span>
@@ -192,7 +159,9 @@ function renderGrid() {
   if (!filtered.length) {
     grid.innerHTML = `
       <div class="empty-state" style="grid-column: 1 / -1;">
-        ${ICONS.empty}
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/>
+        </svg>
         <h3>Nada por aquí todavía</h3>
         <p>No hemos encontrado recetas con esos filtros. Prueba a cambiar la categoría o limpia la búsqueda.</p>
         <button class="btn btn--ghost" onclick="resetFilters()">Quitar filtros</button>
@@ -260,8 +229,8 @@ function attachFilterHandlers() {
 function updateStats() {
   const recipes = getRecipes();
   const categories = new Set(recipes.map(r => r.categoria)).size;
-  const avgKcal = Math.round(recipes.reduce((s, r) => s + r.macros.kcal, 0) / recipes.length);
-  const avgProtein = Math.round(recipes.reduce((s, r) => s + r.macros.proteina, 0) / recipes.length);
+  const avgKcal = Math.round(recipes.reduce((s, r) => s + (r.macros.kcal || 0), 0) / recipes.length);
+  const avgProtein = Math.round(recipes.reduce((s, r) => s + (r.macros.proteina || 0), 0) / recipes.length);
 
   const els = {
     count: document.getElementById("stat-count"),

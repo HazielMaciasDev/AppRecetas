@@ -111,7 +111,7 @@ function renderCompatibles() {
   if (!state.items.length) {
     grid.innerHTML = `
       <div class="empty-state" style="grid-column: 1/-1;">
-        <p style="font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.059em; color: var(--color-pine-shadow); font-size: 13px;">
+        <p class="text-mono">
           Añade ingredientes para ver qué puedes cocinar
         </p>
       </div>`;
@@ -148,8 +148,8 @@ function renderCompatibles() {
         <div class="recipe-card__photo">
           ${recipe.foto_url
             ? `<img class="recipe-card__photo-img" src="${recipe.foto_url}" alt="${escapeHtml(recipe.titulo)}" loading="lazy">`
-            : `<div class="recipe-card__photo-placeholder">${window.categoryBadge ? window.categoryBadge(recipe.categoria) : ""}</div>`}
-          <span class="recipe-card__category">● ${recipe.categoria}</span>
+            : `<div class="recipe-card__photo-placeholder">${window.categoryIcon ? window.categoryIcon(recipe.categoria) : ""}</div>`}
+          <span class="recipe-card__category">${recipe.categoria}</span>
           ${compatibleLabel}
         </div>
         <div class="recipe-card__body">

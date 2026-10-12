@@ -27,12 +27,12 @@ function renderPerfilActivo() {
     return;
   }
   el.innerHTML = `
-    <h3 style="font-family: var(--font-serif); font-size: var(--text-heading-sm); margin-bottom: var(--space-2);">${escapeHtml(state.perfil.nombre)}</h3>
-    <p style="font-family: var(--font-sans); color: var(--color-slate); font-size: var(--text-body-sm);">
-      <strong>${fmtKcal(state.perfil.kcal_objetivo)} kcal/día</strong> ·
-      Proteína <strong>${state.perfil.proteina_g_objetivo}g</strong> ·
-      Carbos <strong>${state.perfil.carbos_g_objetivo}g</strong> ·
-      Grasas <strong>${state.perfil.grasas_g_objetivo}g</strong>
+    <h3 style="font-family: var(--font-sans); font-size: var(--text-subheading); font-weight: var(--font-weight-semibold); margin-bottom: var(--spacing-8);">${escapeHtml(state.perfil.nombre)}</h3>
+    <p style="font-size: var(--text-body); color: var(--color-mid-gray);">
+      <strong style="color: var(--color-ink);">${fmtKcal(state.perfil.kcal_objetivo)} kcal/día</strong> ·
+      Proteína <strong style="color: var(--color-ink);">${state.perfil.proteina_g_objetivo}g</strong> ·
+      Carbos <strong style="color: var(--color-ink);">${state.perfil.carbos_g_objetivo}g</strong> ·
+      Grasas <strong style="color: var(--color-ink);">${state.perfil.grasas_g_objetivo}g</strong>
     </p>`;
   document.getElementById("btn-generar").disabled = false;
 }

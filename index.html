@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Recetas bajas en calorías con macros claros. Desayunos, comidas, cenas, bebidas, colación y postre.">
+  <meta name="description" content="Recetas bajas en calorías en video. Click en cada miniatura para ver la receta.">
   <title>AppRecetas — Recetas bajas en calorías</title>
 
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230a0a0a'/%3E%3Ctext x='16' y='22' font-family='Inter, sans-serif' font-size='17' font-weight='600' text-anchor='middle' fill='white'%3Er%3C/text%3E%3C/svg%3E">
@@ -14,6 +14,7 @@
 
   <link rel="stylesheet" href="assets/css/tokens.css">
   <link rel="stylesheet" href="assets/css/styles.css">
+  <link rel="stylesheet" href="assets/css/pages.css">
 </head>
 <body>
 
@@ -43,13 +44,9 @@
   <header class="hero">
     <div class="container">
       <div class="hero__inner">
-        <span class="hero__eyebrow fade-in">Recetario nutricional</span>
+        <span class="hero__eyebrow fade-in">Recetario en video</span>
         <h1 class="hero__title fade-in fade-in-1">Recetas bajas en calorías.</h1>
-        <p class="hero__sub fade-in fade-in-2">Cocina rico, ligero y con los macros a la vista. Para que llegues a tu meta sin pasar hambre.</p>
-        <div class="hero__actions fade-in fade-in-3">
-          <a href="#recetas" class="btn btn--primary btn--icon">Explorar recetario</a>
-          <a href="#recetas" class="btn btn--ghost">Ver categorías</a>
-        </div>
+        <p class="hero__sub fade-in fade-in-2">Cocina rico, ligero y con los macros a la vista. Click en cada miniatura para ver el video.</p>
       </div>
     </div>
 
@@ -61,8 +58,6 @@
           <span><span class="stat-strip__stat" id="stat-categories">— categorías</span></span>
           <span class="stat-strip__sep"></span>
           <span><span class="stat-strip__label">Promedio por receta</span> <span class="stat-strip__stat" id="stat-avg">—</span></span>
-          <span class="stat-strip__sep"></span>
-          <span><span class="stat-strip__label">Sin procesado</span> · <span class="stat-strip__label">100% honesto</span></span>
         </div>
       </div>
     </div>
@@ -74,14 +69,14 @@
       <div class="section-head">
         <span class="text-mono">Recetas</span>
         <h2 class="heading-lg">Para cada momento del día</h2>
-        <p class="section-head__lede">6 categorías. Ingredientes, tiempos, dificultad y macros por porción.</p>
+        <p class="section-head__lede">6 categorías. Click en una miniatura para abrir el video en una nueva pestaña.</p>
       </div>
 
       <div id="filters-container">
         <!-- inyectado por JS -->
       </div>
 
-      <div id="recipe-grid" class="recipe-grid">
+      <div id="video-grid" class="recipe-grid">
         <!-- inyectado por JS -->
       </div>
     </div>
@@ -94,17 +89,6 @@
         <div>
           <h3 class="footer__brand">AppRecetas</h3>
           <p class="footer__tagline">Recetas bajas en calorías con macros claros en cada plato.</p>
-        </div>
-        <div class="footer__col">
-          <h4>Categorías</h4>
-          <ul>
-            <li><a href="index.html#recetas">Bebidas</a></li>
-            <li><a href="index.html#recetas">Desayunos</a></li>
-            <li><a href="index.html#recetas">Comidas</a></li>
-            <li><a href="index.html#recetas">Cenas</a></li>
-            <li><a href="index.html#recetas">Colación</a></li>
-            <li><a href="index.html#recetas">Postre</a></li>
-          </ul>
         </div>
         <div class="footer__col">
           <h4>App</h4>

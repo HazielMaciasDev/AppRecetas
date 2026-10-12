@@ -1,97 +1,79 @@
 // =============================================================
-// RECIPE RENDERING — index.html
-// Diseño shadcn-style: monocromático, sin stickers decorativos.
-// Iconos Lucide-style thin-stroke (1.5px).
+// VIDEOS RENDERING — index.html
+// Cada card es una miniatura que abre el video en nueva pestaña.
 // =============================================================
 
 const CATEGORIES = ["Desayunos", "Comidas", "Cenas", "Bebidas", "Colación", "Postre"];
 
 // -------------------------------------------------------------
-// Iconos Lucide-style minimalistas (thin stroke 1.5px)
+// Iconos Lucide-style
 // -------------------------------------------------------------
 const ICONS = {
-  clock: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>`,
-  users: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>`,
+  play: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 4 20 12 6 20 6 4" fill="currentColor" stroke="none"/></svg>`,
   search: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>`,
-  // Iconos por categoría (Lucide-style)
-  desayuno: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8a4 4 0 0 0-8 0v2h8z"/><path d="M3 10h18v3a6 6 0 0 1-6 6H9a6 6 0 0 1-6-6z"/><path d="M6 19v2"/><path d="M18 19v2"/></svg>`,
-  comida:   `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11h18"/><path d="M12 11v9"/><path d="M5 11a7 7 0 0 1 14 0"/></svg>`,
-  cena:     `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h20"/><path d="M5 12V8a3 3 0 0 1 6 0v4"/><circle cx="17" cy="10" r="3"/><path d="M19 13v8"/><path d="M9 13v6"/></svg>`,
-  bebida:   `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2h8l-2 19a2 2 0 0 1-2 2h-0a2 2 0 0 1-2-2z"/><path d="M8 6h8"/><path d="M16 3h2a2 2 0 0 1 2 2v0a2 2 0 0 1-2 2h-2"/></svg>`,
-  colacion: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 6v6l3 3"/></svg>`,
-  postre:   `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21h16"/><path d="M5 21V11a7 7 0 0 1 14 0v10"/><path d="M12 4v7"/><path d="M9 7l3-3 3 3"/></svg>`
+  plate: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/></svg>`
 };
 
-function categoryIcon(categoria) {
-  const map = {
-    "Desayunos": ICONS.desayuno,
-    "Comidas":   ICONS.comida,
-    "Cenas":     ICONS.cena,
-    "Bebidas":   ICONS.bebida,
-    "Colación":  ICONS.colacion,
-    "Postre":    ICONS.postre
-  };
-  return map[categoria] || ICONS.comida;
+function escapeHtml(s) {
+  return String(s || "").replace(/[&<>"']/g, c => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+  }[c]));
 }
-
-window.categoryIcon = categoryIcon;
 
 // -------------------------------------------------------------
 // State
 // -------------------------------------------------------------
 const state = {
   activeCategory: "Todas",
-  searchTerm: "",
-  removedFilters: new Set()
+  searchTerm: ""
 };
 
 // -------------------------------------------------------------
 // Helpers
 // -------------------------------------------------------------
-function getRecipes() {
-  return (window.RECIPES_DATA || []).map(r => window.normalizeRecipe ? window.normalizeRecipe(r) : r);
+function getVideos() {
+  return window.VIDEOS_DATA || [];
 }
 
-function filterRecipes() {
-  let list = getRecipes();
+function filterVideos() {
+  let list = getVideos();
   if (state.activeCategory !== "Todas") {
-    list = list.filter(r => r.categoria === state.activeCategory);
-  }
-  if (state.removedFilters.has(state.activeCategory)) {
-    list = [];
+    list = list.filter(v => v.categoria === state.activeCategory);
   }
   if (state.searchTerm) {
     const t = state.searchTerm.toLowerCase();
-    list = list.filter(r =>
-      r.titulo.toLowerCase().includes(t) ||
-      (r.descripcion || "").toLowerCase().includes(t) ||
-      (r.tags || []).some(tag => tag.toLowerCase().includes(t))
+    list = list.filter(v =>
+      (v.titulo || "").toLowerCase().includes(t) ||
+      (v.descripcion_corta || "").toLowerCase().includes(t)
     );
   }
   return list;
 }
 
 // -------------------------------------------------------------
-// Render: Recipe card
+// Render: Video card
 // -------------------------------------------------------------
-function renderPhotoCard(recipe) {
-  const photoContent = recipe.foto
-    ? `<img class="recipe-card__photo-img" src="${recipe.foto}" alt="${recipe.titulo}" loading="lazy">`
-    : `<div class="recipe-card__photo-placeholder">${categoryIcon(recipe.categoria)}</div>`;
+function renderVideoCard(video) {
+  const photoContent = video.foto_url
+    ? `<img class="recipe-card__photo-img" src="${escapeHtml(video.foto_url)}" alt="${escapeHtml(video.titulo)}" loading="lazy">`
+    : `<div class="recipe-card__photo-placeholder">${ICONS.plate}</div>`;
+
+  const meta = [
+    video.kcal != null ? `${video.kcal} kcal` : null,
+    video.proteina_g != null ? `${video.proteina_g}g proteína` : null
+  ].filter(Boolean).join(" · ");
 
   return `
-    <a href="receta.html?id=${recipe.id}" class="recipe-card fade-in">
+    <a href="${escapeHtml(video.video_url)}" target="_blank" rel="noopener noreferrer" class="recipe-card fade-in video-card">
       <div class="recipe-card__photo">
         ${photoContent}
-        <span class="recipe-card__category">${recipe.categoria}</span>
+        <span class="video-play" aria-label="Ver video">${ICONS.play}</span>
       </div>
       <div class="recipe-card__body">
-        <h3 class="recipe-card__title">${recipe.titulo}</h3>
-        <p class="recipe-card__desc">${recipe.descripcion || ""}</p>
+        <h3 class="recipe-card__title">${escapeHtml(video.titulo)}</h3>
+        ${video.descripcion_corta ? `<p class="recipe-card__desc">${escapeHtml(video.descripcion_corta)}</p>` : ""}
         <div class="recipe-card__meta">
-          <span class="recipe-card__meta-item">${ICONS.clock} ${recipe.tiempoMin} min</span>
-          <span class="recipe-card__meta-item">${ICONS.users} ${recipe.porciones} pers</span>
-          <span style="margin-left: auto;">${recipe.macros.kcal} kcal</span>
+          <span>${meta || "Ver video"}</span>
         </div>
       </div>
     </a>
@@ -102,9 +84,9 @@ function renderPhotoCard(recipe) {
 // Render: Filter pills
 // -------------------------------------------------------------
 function renderFilters() {
-  const recipes = getRecipes();
-  const counts = { "Todas": recipes.length };
-  CATEGORIES.forEach(c => counts[c] = recipes.filter(r => r.categoria === c).length);
+  const videos = getVideos();
+  const counts = { "Todas": videos.length };
+  CATEGORIES.forEach(c => counts[c] = videos.filter(v => v.categoria === c).length);
 
   const pillsHtml = ["Todas", ...CATEGORIES].map(cat => `
     <button
@@ -124,7 +106,7 @@ function renderFilters() {
       <div class="filters__row filters__row--end">
         <div class="search-input">
           ${ICONS.search}
-          <input type="search" id="recipe-search" placeholder="Buscar por nombre, ingrediente, tag…" value="${state.searchTerm}" />
+          <input type="search" id="video-search" placeholder="Buscar por nombre…" value="${state.searchTerm}" />
         </div>
         <div class="active-filters" id="active-filters-display"></div>
       </div>
@@ -153,30 +135,29 @@ function renderActiveFilters() {
 // Render: Grid + empty state
 // -------------------------------------------------------------
 function renderGrid() {
-  const filtered = filterRecipes();
-  const grid = document.getElementById("recipe-grid");
+  const filtered = filterVideos();
+  const grid = document.getElementById("video-grid");
 
   if (!filtered.length) {
     grid.innerHTML = `
       <div class="empty-state" style="grid-column: 1 / -1;">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/>
-        </svg>
+        ${ICONS.search}
         <h3>Nada por aquí todavía</h3>
-        <p>No hemos encontrado recetas con esos filtros. Prueba a cambiar la categoría o limpia la búsqueda.</p>
+        <p>No hemos encontrado videos con esos filtros. Prueba a cambiar la categoría o limpia la búsqueda.</p>
         <button class="btn btn--ghost" onclick="resetFilters()">Quitar filtros</button>
       </div>
     `;
     return;
   }
-  grid.innerHTML = filtered.map(renderPhotoCard).join("");
+  grid.innerHTML = filtered.map(renderVideoCard).join("");
 }
 
 function resetFilters() {
   state.activeCategory = "Todas";
   state.searchTerm = "";
-  state.removedFilters.clear();
-  document.getElementById("recipe-search").value = "";
+  state.removedFilters?.clear?.();
+  const inp = document.getElementById("video-search");
+  if (inp) inp.value = "";
   renderAll();
 }
 
@@ -195,12 +176,11 @@ function attachFilterHandlers() {
   document.querySelectorAll("[data-category]").forEach(btn => {
     btn.addEventListener("click", e => {
       state.activeCategory = e.currentTarget.dataset.category;
-      state.removedFilters.clear();
       renderAll();
     });
   });
 
-  const search = document.getElementById("recipe-search");
+  const search = document.getElementById("video-search");
   if (search) {
     search.addEventListener("input", e => {
       state.searchTerm = e.target.value;
@@ -215,7 +195,7 @@ function attachFilterHandlers() {
       if (type === "category") state.activeCategory = "Todas";
       if (type === "search") {
         state.searchTerm = "";
-        const inp = document.getElementById("recipe-search");
+        const inp = document.getElementById("video-search");
         if (inp) inp.value = "";
       }
       renderAll();
@@ -227,26 +207,30 @@ function attachFilterHandlers() {
 // Stat strip update
 // -------------------------------------------------------------
 function updateStats() {
-  const recipes = getRecipes();
-  const categories = new Set(recipes.map(r => r.categoria)).size;
-  const avgKcal = Math.round(recipes.reduce((s, r) => s + (r.macros.kcal || 0), 0) / recipes.length);
-  const avgProtein = Math.round(recipes.reduce((s, r) => s + (r.macros.proteina || 0), 0) / recipes.length);
+  const videos = getVideos();
+  const categories = new Set(videos.map(v => v.categoria).filter(Boolean)).size;
+  const avgKcal = videos.length
+    ? Math.round(videos.reduce((s, v) => s + (v.kcal || 0), 0) / videos.length)
+    : 0;
+  const avgProtein = videos.length
+    ? Math.round(videos.reduce((s, v) => s + Number(v.proteina_g || 0), 0) / videos.length)
+    : 0;
 
   const els = {
     count: document.getElementById("stat-count"),
     categories: document.getElementById("stat-categories"),
     avg: document.getElementById("stat-avg")
   };
-  if (els.count) els.count.textContent = `${recipes.length} recetas`;
+  if (els.count) els.count.textContent = `${videos.length} recetas`;
   if (els.categories) els.categories.textContent = `${categories} categorías`;
-  if (els.avg) els.avg.textContent = `${avgProtein}g proteína media`;
+  if (els.avg) els.avg.textContent = `${avgKcal} kcal media · ${avgProtein}g proteína`;
 }
 
 // Boot
 document.addEventListener("DOMContentLoaded", async () => {
-  if (document.getElementById("recipe-grid")) {
-    if (window.loadRecipes) {
-      await window.loadRecipes();
+  if (document.getElementById("video-grid")) {
+    if (window.loadVideos) {
+      await window.loadVideos();
     }
     renderAll();
     updateStats();

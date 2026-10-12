@@ -1,16 +1,13 @@
 // =============================================================
-// DESPENSA — CRUD ingredientes + matching de recetas
+// DESPENSA — Input de palabras clave + matching con titulos de videos
+// Adaptado al nuevo modelo: matching por palabras del titulo/descripcion.
 // =============================================================
 
 const state = {
   items: [],          // [{id, ingrediente, cantidad}]
-  recipes: [],        // todas las recetas
-  searchTerm: ""
+  videos: []          // todos los videos
 };
 
-// -------------------------------------------------------------
-// Normalización para matching flexible
-// -------------------------------------------------------------
 function norm(str) {
   return String(str || "")
     .toLowerCase()
@@ -20,58 +17,39 @@ function norm(str) {
     .trim();
 }
 
-// Quitar palabras irrelevantes que ensucian el match
 const STOPWORDS = new Set([
   "de", "del", "la", "el", "los", "las", "y", "o", "u", "con", "sin",
-  "a", "al", "en", "un", "una", "unos", "unas", "para", "por", "fresco",
-  "fresca", "seco", "seca", "secos", "secas", "molido", "molida", "rallado",
-  "rallada", "troceado", "troceada", "picado", "picada", "natural", "light",
-  "extra", "virgen", "puro", "pura", "pequeno", "pequena", "grande", "chico"
+  "a", "al", "en", "un", "una", "unos", "unas", "para", "por"
 ]);
 
 function tokens(s) {
   return norm(s).split(" ").filter(t => t.length >= 3 && !STOPWORDS.has(t));
 }
 
-// Devuelve true si TODOS los tokens principales del ingrediente están
-// cubiertos por la despensa.
-function matchIngredient(ingredienteTexto, despensaTokens) {
-  const ingTokens = tokens(ingredienteTexto);
-  if (ingTokens.length === 0) return true; // si no hay tokens, lo damos por OK
-  // requiere al menos 1 token del ingrediente presente en la despensa
-  // (matching flexible — un solo ingrediente del refri suele bastar)
-  return ingTokens.some(t => despensaTokens.some(d => d.includes(t) || t.includes(d) || d === t));
+function calcularCompatibilidad(video, despensaTokens) {
+  const tituloTokens = tokens(video.titulo + " " + (video.descripcion_corta || ""));
+  if (tituloTokens.length === 0) return { score: 0, hits: 0 };
+  const hits = tituloTokens.filter(t => despensaTokens.some(d => d.includes(t) || t.includes(d) || d === t)).length;
+  return { score: hits / tituloTokens.length, hits };
 }
 
-function calcularCompatibilidad(receta, despensaTokens) {
-  const total = receta.ingredientes.length;
-  if (total === 0) return { score: 0, count: 0, total: 0 };
-  let count = 0;
-  for (const ing of receta.ingredientes) {
-    if (matchIngredient(ing.item, despensaTokens)) count++;
-  }
-  return {
-    score: count / total,
-    count,
-    total
-  };
+function escapeHtml(s) {
+  return String(s || "").replace(/[&<>"']/g, c => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+  }[c]));
 }
 
-// -------------------------------------------------------------
-// Render: lista de ingredientes en despensa
-// -------------------------------------------------------------
 function renderDespensaList() {
   const list = document.getElementById("despensa-list");
   if (!state.items.length) {
     list.innerHTML = `
       <div class="empty-state" style="grid-column: 1/-1;">
-        <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect x="14" y="22" width="52" height="46" rx="4" stroke="currentColor" stroke-width="2" stroke-dasharray="4 6"/>
-          <path d="M22 22V14a18 18 0 0136 0v8" stroke="currentColor" stroke-width="2"/>
-          <path d="M28 38h24M28 48h16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="6" width="18" height="14" rx="2"/>
+          <path d="M8 6V4a4 4 0 0 1 8 0v2"/>
         </svg>
         <h3>Despensa vacía</h3>
-        <p>Añade arriba los ingredientes que tienes en casa y te diremos qué cocinar.</p>
+        <p>Añade palabras clave de lo que tienes en casa (ej: "pollo", "avena", "huevos"). Te mostraremos qué videos coinciden.</p>
       </div>`;
     return;
   }
@@ -95,15 +73,6 @@ function renderDespensaList() {
   });
 }
 
-function escapeHtml(s) {
-  return String(s).replace(/[&<>"']/g, c => ({
-    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
-  }[c]));
-}
-
-// -------------------------------------------------------------
-// Render: grid de recetas compatibles
-// -------------------------------------------------------------
 function renderCompatibles() {
   const grid = document.getElementById("compatibles-grid");
   const despensaTokens = state.items.flatMap(it => tokens(it.ingrediente + " " + (it.cantidad || "")));
@@ -111,101 +80,55 @@ function renderCompatibles() {
   if (!state.items.length) {
     grid.innerHTML = `
       <div class="empty-state" style="grid-column: 1/-1;">
-        <p class="text-mono">
-          Añade ingredientes para ver qué puedes cocinar
-        </p>
+        <p class="text-mono">Añade palabras clave para ver qué videos coinciden</p>
       </div>`;
     document.getElementById("stat-compatibles").textContent = "0";
     return;
   }
 
-  const compatibles = state.recipes
-    .map(r => ({ recipe: r, comp: calcularCompatibilidad(r, despensaTokens) }))
-    .filter(x => x.comp.count > 0)
-    .sort((a, b) => b.comp.score - a.comp.score || b.comp.count - a.comp.count);
+  const compatibles = state.videos
+    .map(v => ({ video: v, comp: calcularCompatibilidad(v, despensaTokens) }))
+    .filter(x => x.comp.hits > 0)
+    .sort((a, b) => b.comp.score - a.comp.score || b.comp.hits - a.comp.hits);
 
   document.getElementById("stat-compatibles").textContent = compatibles.length;
 
   if (!compatibles.length) {
     grid.innerHTML = `
       <div class="empty-state" style="grid-column: 1/-1;">
-        <h3>Sin coincidencias claras</h3>
-        <p>Añade más ingredientes o busca la receta manualmente en el recetario.</p>
+        <h3>Sin coincidencias</h3>
+        <p>Añade más palabras clave o explora todas las recetas en el recetario.</p>
         <a href="index.html" class="btn btn--ghost">Ir al recetario</a>
       </div>`;
     return;
   }
 
-  grid.innerHTML = compatibles.map(({ recipe, comp }) => {
+  grid.innerHTML = compatibles.map(({ video, comp }) => {
     const pct = Math.round(comp.score * 100);
-    const compatibleLabel = pct >= 80
-      ? `<span class="badge badge--ok">Tienes todo · ${pct}%</span>`
-      : pct >= 50
-        ? `<span class="badge badge--mid">Casi · ${pct}%</span>`
-        : `<span class="badge badge--low">Te falta · ${pct}%</span>`;
+    const compatibleLabel = pct >= 50
+      ? `<span class="badge badge--ok">Match · ${pct}%</span>`
+      : `<span class="badge badge--mid">Sugerencia · ${pct}%</span>`;
     return `
-      <a href="receta.html?id=${recipe.id}" class="recipe-card">
+      <a href="${escapeHtml(video.video_url)}" target="_blank" rel="noopener noreferrer" class="recipe-card">
         <div class="recipe-card__photo">
-          ${recipe.foto_url
-            ? `<img class="recipe-card__photo-img" src="${recipe.foto_url}" alt="${escapeHtml(recipe.titulo)}" loading="lazy">`
-            : `<div class="recipe-card__photo-placeholder">${window.categoryIcon ? window.categoryIcon(recipe.categoria) : ""}</div>`}
-          <span class="recipe-card__category">${recipe.categoria}</span>
+          ${video.foto_url
+            ? `<img class="recipe-card__photo-img" src="${escapeHtml(video.foto_url)}" alt="${escapeHtml(video.titulo)}" loading="lazy">`
+            : `<div class="recipe-card__photo-placeholder">${window.categoryIcon ? window.categoryIcon(video.categoria) : ""}</div>`}
+          <span class="recipe-card__category">${video.categoria}</span>
           ${compatibleLabel}
         </div>
         <div class="recipe-card__body">
-          <h3 class="recipe-card__title">${escapeHtml(recipe.titulo)}</h3>
-          <p class="recipe-card__desc">${escapeHtml(recipe.descripcion || "")}</p>
+          <h3 class="recipe-card__title">${escapeHtml(video.titulo)}</h3>
+          <p class="recipe-card__desc">${escapeHtml(video.descripcion_corta || "")}</p>
           <div class="recipe-card__meta">
-            <span>${recipe.macros.kcal} kcal</span>
-            <span>·</span>
-            <span>${recipe.tiempo_min} min</span>
-            <span>·</span>
-            <span>Tienes ${comp.count}/${comp.total}</span>
+            ${video.kcal != null ? `<span>${video.kcal} kcal</span><span>·</span>` : ""}
+            ${video.proteina_g != null ? `<span>${video.proteina_g}g proteína</span>` : ""}
           </div>
         </div>
       </a>`;
   }).join("");
 }
 
-// -------------------------------------------------------------
-// Autocomplete: sugerir ingredientes desde BD
-// -------------------------------------------------------------
-function setupAutocomplete() {
-  const input = document.getElementById("input-ingrediente");
-  const suggestions = document.getElementById("autocomplete-suggestions");
-  if (!input) return;
-
-  // Construir set único de ingredientes desde las recetas
-  const allIngredientes = new Set();
-  state.recipes.forEach(r => r.ingredientes.forEach(i => allIngredientes.add(i.item)));
-  const sorted = Array.from(allIngredientes).sort();
-
-  input.addEventListener("input", () => {
-    const val = norm(input.value);
-    if (val.length < 2) { suggestions.hidden = true; suggestions.innerHTML = ""; return; }
-    const matches = sorted.filter(i => norm(i).includes(val)).slice(0, 8);
-    if (!matches.length) { suggestions.hidden = true; suggestions.innerHTML = ""; return; }
-    suggestions.innerHTML = matches.map(m =>
-      `<button type="button" class="autocomplete-item">${escapeHtml(m)}</button>`
-    ).join("");
-    suggestions.hidden = false;
-    suggestions.querySelectorAll(".autocomplete-item").forEach(btn => {
-      btn.addEventListener("click", () => {
-        input.value = btn.textContent;
-        suggestions.hidden = true;
-        input.focus();
-      });
-    });
-  });
-
-  input.addEventListener("blur", () => {
-    setTimeout(() => { suggestions.hidden = true; }, 150);
-  });
-}
-
-// -------------------------------------------------------------
-// Refresh
-// -------------------------------------------------------------
 async function refreshAll() {
   state.items = await window.SUPABASE.listDespensa();
   document.getElementById("stat-total").textContent = state.items.length;
@@ -213,13 +136,9 @@ async function refreshAll() {
   renderCompatibles();
 }
 
-// -------------------------------------------------------------
-// Boot
-// -------------------------------------------------------------
 document.addEventListener("DOMContentLoaded", async () => {
-  await window.loadRecipes();
-  state.recipes = window.RECIPES_DATA;
-
+  if (window.loadVideos) await window.loadVideos();
+  state.videos = window.VIDEOS_DATA;
   await refreshAll();
 
   const form = document.getElementById("despensa-form");
@@ -238,6 +157,4 @@ document.addEventListener("DOMContentLoaded", async () => {
     await window.SUPABASE.clearDespensa();
     await refreshAll();
   });
-
-  setupAutocomplete();
 });

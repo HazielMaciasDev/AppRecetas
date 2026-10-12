@@ -1,11 +1,11 @@
 // =============================================================
-// PLAN — Render del plan semanal + lista de compras
+// PLAN — Render del plan semanal (links a videos)
 // =============================================================
 
 const state = {
   perfil: null,
-  recetas: [],
-  plan: null  // { id, perfil_id, perfil_nombre, dias, lista_compras, semana_inicio }
+  videos: [],
+  plan: null
 };
 
 function escapeHtml(s) {
@@ -16,13 +16,10 @@ function escapeHtml(s) {
 
 function fmtKcal(n) { return Math.round(n); }
 
-// -------------------------------------------------------------
-// Render: info del perfil activo
-// -------------------------------------------------------------
 function renderPerfilActivo() {
   const el = document.getElementById("perfil-activo-detail");
   if (!state.perfil) {
-    el.innerHTML = `<p style="font-family: var(--font-sans); color: var(--color-slate);">No hay perfil activo. <a href="perfiles.html" style="color: var(--color-deep-teal); text-decoration: underline;">Crea uno aquí</a>.</p>`;
+    el.innerHTML = `<p style="font-size: var(--text-body); color: var(--color-mid-gray);">No hay perfil activo. <a href="perfiles.html" style="color: var(--color-ink); text-decoration: underline;">Crea uno aquí</a>.</p>`;
     document.getElementById("btn-generar").disabled = true;
     return;
   }
@@ -30,16 +27,11 @@ function renderPerfilActivo() {
     <h3 style="font-family: var(--font-sans); font-size: var(--text-subheading); font-weight: var(--font-weight-semibold); margin-bottom: var(--spacing-8);">${escapeHtml(state.perfil.nombre)}</h3>
     <p style="font-size: var(--text-body); color: var(--color-mid-gray);">
       <strong style="color: var(--color-ink);">${fmtKcal(state.perfil.kcal_objetivo)} kcal/día</strong> ·
-      Proteína <strong style="color: var(--color-ink);">${state.perfil.proteina_g_objetivo}g</strong> ·
-      Carbos <strong style="color: var(--color-ink);">${state.perfil.carbos_g_objetivo}g</strong> ·
-      Grasas <strong style="color: var(--color-ink);">${state.perfil.grasas_g_objetivo}g</strong>
+      Proteína <strong style="color: var(--color-ink);">${state.perfil.proteina_g_objetivo}g</strong>
     </p>`;
   document.getElementById("btn-generar").disabled = false;
 }
 
-// -------------------------------------------------------------
-// Render: grid de plan
-// -------------------------------------------------------------
 function renderPlan() {
   const grid = document.getElementById("plan-grid");
   const resumen = document.getElementById("plan-resumen");
@@ -47,14 +39,12 @@ function renderPlan() {
   if (!state.plan) {
     grid.innerHTML = `
       <div class="empty-state">
-        <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect x="10" y="14" width="60" height="52" rx="4" stroke="currentColor" stroke-width="2" stroke-dasharray="4 6"/>
-          <path d="M10 24h60" stroke="currentColor" stroke-width="2"/>
-          <path d="M22 14v-6M40 14v-6M58 14v-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-          <path d="M22 38h12M22 48h12M40 38h12M40 48h12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="5" width="18" height="16" rx="2"/>
+          <path d="M3 9h18M8 3v4M16 3v4"/>
         </svg>
         <h3>Aún no hay plan</h3>
-        <p>Pulsa "Generar plan nuevo" para armar tu semana. La app elegirá recetas que respeten tus kcal y macros objetivo.</p>
+        <p>Pulsa "Generar plan nuevo" para armar tu semana con los videos disponibles.</p>
       </div>`;
     resumen.hidden = true;
     document.getElementById("btn-clear").hidden = true;
@@ -69,16 +59,16 @@ function renderPlan() {
       <h3 class="plan-day__title">${escapeHtml(dia.nombre)}</h3>
       <div class="plan-day__slots">
         ${dia.slots.map(slot => {
-          if (!slot.receta) {
+          if (!slot.video) {
             return `<div class="plan-slot plan-slot--empty">
               <span class="plan-slot__label">${escapeHtml(slot.label)}</span>
               <span class="plan-slot__hint">— sin sugerencia —</span>
             </div>`;
           }
-          return `<a class="plan-slot" href="receta.html?id=${escapeHtml(slot.receta.id)}">
+          return `<a class="plan-slot" href="${escapeHtml(slot.video.video_url)}" target="_blank" rel="noopener noreferrer">
             <span class="plan-slot__label">${escapeHtml(slot.label)}</span>
-            <span class="plan-slot__title">${escapeHtml(slot.receta.titulo)}</span>
-            <span class="plan-slot__meta">${slot.receta.macros.kcal} kcal · ${slot.receta.macros.proteina}P · ${slot.receta.macros.carbohidratos}C · ${slot.receta.macros.grasas}G</span>
+            <span class="plan-slot__title">${escapeHtml(slot.video.titulo)}</span>
+            <span class="plan-slot__meta">${slot.video.kcal || 0} kcal · ${slot.video.proteina_g || 0}g proteína</span>
           </a>`;
         }).join("")}
       </div>
@@ -88,14 +78,11 @@ function renderPlan() {
   renderResumen();
 }
 
-// -------------------------------------------------------------
-// Render: resumen + lista de compras
-// -------------------------------------------------------------
 function renderResumen() {
   const promedio = window.MEAL_PLANNER.agregarMacros(state.plan);
   const objetivo = state.perfil;
 
-  const cell = (label, value, target, unit, isKcal = false) => {
+  const cell = (label, value, target, unit) => {
     const diff = value - target;
     const pct = target ? Math.round((diff / target) * 100) : 0;
     const status = Math.abs(pct) <= 10 ? "ok"
@@ -113,50 +100,24 @@ function renderResumen() {
   };
 
   document.getElementById("macros-promedio").innerHTML = `
-    ${cell("Kcal/día", promedio.kcal, objetivo.kcal_objetivo, "", true)}
+    ${cell("Kcal/día", promedio.kcal, objetivo.kcal_objetivo, "")}
     ${cell("Proteína", promedio.proteina, objetivo.proteina_g_objetivo, "g")}
-    ${cell("Carbohidratos", promedio.carbohidratos, objetivo.carbos_g_objetivo, "g")}
-    ${cell("Grasas", promedio.grasas, objetivo.grasas_g_objetivo, "g")}
   `;
 
-  // Lista de compras
-  const consolidada = window.MEAL_PLANNER.consolidarIngredientes(state.recetas, state.plan);
-  const grupos = window.MEAL_PLANNER.agruparPorCategoria(consolidada);
-  const labels = {
-    produced: "Producción",
-    proteina: "Proteínas",
-    lacteo: "Lácteos",
-    carbs: "Carbohidratos",
-    otros: "Otros"
-  };
+  // Lista simplificada: solo los titulos del plan
+  const titulos = window.MEAL_PLANNER.consolidarVideos(state.videos, state.plan);
+  document.getElementById("lista-compras").innerHTML = `
+    <div class="lista-grupo">
+      <h3 class="lista-grupo__title">Recetas del plan</h3>
+      <ul class="lista-grupo__items">
+        ${titulos.map(t => `<li><span class="lista-item__name">${escapeHtml(t)}</span></li>`).join("")}
+      </ul>
+    </div>
+  `;
 
-  const html = Object.entries(grupos)
-    .filter(([_, items]) => items.length)
-    .map(([cat, items]) => `
-      <div class="lista-grupo">
-        <h3 class="lista-grupo__title">${labels[cat]}</h3>
-        <ul class="lista-grupo__items">
-          ${items.map(it => `
-            <li>
-              <label class="lista-item">
-                <input type="checkbox" class="lista-item__check">
-                <span class="lista-item__name">${escapeHtml(it.nombre)}</span>
-              </label>
-            </li>
-          `).join("")}
-        </ul>
-      </div>
-    `).join("");
-
-  document.getElementById("lista-compras").innerHTML = html;
-
-  // Botones de print/copy
   document.getElementById("btn-print").onclick = () => window.print();
   document.getElementById("btn-copy").onclick = async () => {
-    const txt = Object.entries(grupos)
-      .filter(([_, items]) => items.length)
-      .map(([cat, items]) => `${labels[cat]}\n${items.map(it => `  - ${it.nombre}`).join("\n")}`)
-      .join("\n\n");
+    const txt = `Plan semanal — ${state.perfil.nombre}\n\n` + titulos.join("\n");
     try {
       await navigator.clipboard.writeText(txt);
       const btn = document.getElementById("btn-copy");
@@ -168,23 +129,12 @@ function renderResumen() {
   };
 }
 
-// -------------------------------------------------------------
-// Acciones
-// -------------------------------------------------------------
 async function generarNuevo() {
   if (!state.perfil) return;
-  const plan = window.MEAL_PLANNER.generarPlan(state.recetas, state.perfil);
+  const plan = window.MEAL_PLANNER.generarPlan(state.videos, state.perfil);
 
-  // Calcular lista de compras consolidada
-  const consolidada = window.MEAL_PLANNER.consolidarIngredientes(state.recetas, plan);
-  const grupos = window.MEAL_PLANNER.agruparPorCategoria(consolidada);
-
-  // Calcular macros promedio para guardar
-  const promedio = window.MEAL_PLANNER.agregarMacros(plan);
-
-  // Calcular lunes de esta semana
   const today = new Date();
-  const day = today.getDay() || 7; // 1=lunes...7=domingo
+  const day = today.getDay() || 7;
   const monday = new Date(today);
   monday.setDate(today.getDate() - day + 1);
 
@@ -192,11 +142,9 @@ async function generarNuevo() {
     perfil_id: state.perfil.id,
     perfil_nombre: state.perfil.nombre,
     semana_inicio: monday.toISOString().slice(0, 10),
-    dias: plan.dias,
-    lista_compras: grupos
+    dias: plan.dias
   };
 
-  // Borrar planes anteriores y guardar el nuevo
   const anteriores = await window.SUPABASE.listPlanes();
   for (const p of anteriores) {
     await window.SUPABASE.deletePlan(p.id);
@@ -221,7 +169,7 @@ async function refresh() {
     console.error("[plan] getPerfilActivo failed:", err);
     state.perfil = null;
   }
-  state.recetas = window.RECIPES_DATA || [];
+  state.videos = window.VIDEOS_DATA || [];
   try {
     state.plan = await window.SUPABASE.getPlanSemanaActivo();
   } catch (err) {
@@ -232,11 +180,8 @@ async function refresh() {
   renderPlan();
 }
 
-// -------------------------------------------------------------
-// Boot
-// -------------------------------------------------------------
 document.addEventListener("DOMContentLoaded", async () => {
-  await window.loadRecipes();
+  if (window.loadVideos) await window.loadVideos();
   await refresh();
 
   document.getElementById("btn-generar").addEventListener("click", generarNuevo);

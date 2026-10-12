@@ -651,15 +651,15 @@
 }
 
 /* ============================================================
-   DESAYUNOS — video gallery
+   VIDEO CARDS — galería de miniaturas (home)
    ============================================================ */
 
-.desayuno-card {
+.video-card {
   text-decoration: none;
   color: inherit;
 }
 
-.desayuno-play {
+.video-play {
   position: absolute;
   top: var(--spacing-12);
   right: var(--spacing-12);
@@ -673,16 +673,16 @@
   background: var(--color-paper);
   border: 1px solid var(--color-hairline);
   color: var(--color-ink);
-  transition: background 0.15s ease, color 0.15s ease;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
 }
 
-.desayuno-card:hover .desayuno-play {
+.video-card:hover .video-play {
   background: var(--color-ink);
   color: var(--color-paper);
   border-color: var(--color-ink);
 }
 
-.desayuno-play svg {
+.video-play svg {
   width: 14px;
   height: 14px;
 }

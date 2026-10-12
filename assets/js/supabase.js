@@ -28,19 +28,14 @@ const SUPABASE = {
     return res.json();
   },
 
-  // --- Recetas ---
-  async listRecetas() {
-    return this._request(`/recetas?select=*&order=categoria.asc,titulo.asc`);
+  // --- Videos (miniaturas de recetas) ---
+  async listVideos() {
+    return this._request(`/videos?select=*&order=orden.asc,titulo.asc`);
   },
 
-  async getReceta(id) {
-    const rows = await this._request(`/recetas?id=eq.${encodeURIComponent(id)}&select=*&limit=1`);
+  async getVideo(id) {
+    const rows = await this._request(`/videos?id=eq.${encodeURIComponent(id)}&select=*&limit=1`);
     return rows[0] || null;
-  },
-
-  // --- Desayunos (miniaturas de video) ---
-  async listDesayunos() {
-    return this._request(`/desayunos?select=*&order=orden.asc,nombre.asc`);
   },
 
   // --- Perfiles ---

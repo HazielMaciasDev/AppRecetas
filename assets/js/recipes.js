@@ -51,7 +51,7 @@ function filterVideos() {
 }
 
 // -------------------------------------------------------------
-// Render: Video card
+// Render: Video card (click → detalle de la receta)
 // -------------------------------------------------------------
 function renderVideoCard(video) {
   const photoContent = video.foto_url
@@ -64,16 +64,15 @@ function renderVideoCard(video) {
   ].filter(Boolean).join(" · ");
 
   return `
-    <a href="${escapeHtml(video.video_url)}" target="_blank" rel="noopener noreferrer" class="recipe-card fade-in video-card">
+    <a href="receta.html?id=${encodeURIComponent(video.id)}" class="recipe-card fade-in video-card">
       <div class="recipe-card__photo">
         ${photoContent}
-        <span class="video-play" aria-label="Ver video">${ICONS.play}</span>
       </div>
       <div class="recipe-card__body">
         <h3 class="recipe-card__title">${escapeHtml(video.titulo)}</h3>
         ${video.descripcion_corta ? `<p class="recipe-card__desc">${escapeHtml(video.descripcion_corta)}</p>` : ""}
         <div class="recipe-card__meta">
-          <span>${meta || "Ver video"}</span>
+          <span>${meta || "Ver detalle"}</span>
         </div>
       </div>
     </a>

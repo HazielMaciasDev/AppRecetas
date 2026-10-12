@@ -659,30 +659,32 @@
   color: inherit;
 }
 
-.video-play {
-  position: absolute;
-  top: var(--spacing-12);
-  right: var(--spacing-12);
-  z-index: 2;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background: var(--color-paper);
-  border: 1px solid var(--color-hairline);
-  color: var(--color-ink);
-  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+/* Detalle: foto + play badge grande (link a video) */
+.detail-photo--clickable {
+  display: block;
+  position: relative;
+  text-decoration: none;
+  color: inherit;
 }
 
-.video-card:hover .video-play {
+.video-play--large {
+  top: var(--spacing-16);
+  right: var(--spacing-16);
+  width: 56px;
+  height: 56px;
+  background: rgba(10, 10, 10, 0.85);
+  color: white;
+  border: 0;
+  backdrop-filter: blur(4px);
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.detail-photo--clickable:hover .video-play--large {
   background: var(--color-ink);
-  color: var(--color-paper);
-  border-color: var(--color-ink);
+  transform: scale(1.05);
 }
 
-.video-play svg {
-  width: 14px;
-  height: 14px;
+.video-play--large svg {
+  width: 22px;
+  height: 22px;
 }

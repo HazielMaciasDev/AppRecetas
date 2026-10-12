@@ -109,7 +109,7 @@ function renderCompatibles() {
       ? `<span class="badge badge--ok">Match · ${pct}%</span>`
       : `<span class="badge badge--mid">Sugerencia · ${pct}%</span>`;
     return `
-      <a href="${escapeHtml(video.video_url)}" target="_blank" rel="noopener noreferrer" class="recipe-card">
+      <a href="receta.html?id=${encodeURIComponent(video.id)}" class="recipe-card">
         <div class="recipe-card__photo">
           ${video.foto_url
             ? `<img class="recipe-card__photo-img" src="${escapeHtml(video.foto_url)}" alt="${escapeHtml(video.titulo)}" loading="lazy">`

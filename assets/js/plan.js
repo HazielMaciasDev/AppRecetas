@@ -65,7 +65,7 @@ function renderPlan() {
               <span class="plan-slot__hint">— sin sugerencia —</span>
             </div>`;
           }
-          return `<a class="plan-slot" href="${escapeHtml(slot.video.video_url)}" target="_blank" rel="noopener noreferrer">
+          return `<a class="plan-slot" href="receta.html?id=${encodeURIComponent(slot.video.id)}">
             <span class="plan-slot__label">${escapeHtml(slot.label)}</span>
             <span class="plan-slot__title">${escapeHtml(slot.video.titulo)}</span>
             <span class="plan-slot__meta">${slot.video.kcal || 0} kcal · ${slot.video.proteina_g || 0}g proteína</span>

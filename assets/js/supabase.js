@@ -38,6 +38,11 @@ const SUPABASE = {
     return rows[0] || null;
   },
 
+  // --- Desayunos (miniaturas de video) ---
+  async listDesayunos() {
+    return this._request(`/desayunos?select=*&order=orden.asc,nombre.asc`);
+  },
+
   // --- Perfiles ---
   async listPerfiles() {
     return this._request(`/perfiles?select=*&order=nombre.asc`);

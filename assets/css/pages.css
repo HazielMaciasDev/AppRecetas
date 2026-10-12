@@ -649,3 +649,40 @@
   text-decoration: line-through;
   opacity: 0.5;
 }
+
+/* ============================================================
+   DESAYUNOS — video gallery
+   ============================================================ */
+
+.desayuno-card {
+  text-decoration: none;
+  color: inherit;
+}
+
+.desayuno-play {
+  position: absolute;
+  top: var(--spacing-12);
+  right: var(--spacing-12);
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--color-paper);
+  border: 1px solid var(--color-hairline);
+  color: var(--color-ink);
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.desayuno-card:hover .desayuno-play {
+  background: var(--color-ink);
+  color: var(--color-paper);
+  border-color: var(--color-ink);
+}
+
+.desayuno-play svg {
+  width: 14px;
+  height: 14px;
+}
